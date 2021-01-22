@@ -195,23 +195,24 @@ var QRCode;
 				return el;
 			}
 
-			var svg = makeSVG("svg" , {'viewBox': '0 0 ' + String(nCount) + " " + String(nCount), 'width': '100%', 'height': '100%', 'fill': _htOption.colorLight});
-			svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+			var svg = makeSVG("svg", { 'viewBox': '0 0 ' + String(nCount) + " " + String(nCount), 'width': _htOption.width + 'px', 'height': _htOption.height + 'px', 'fill': _htOption.colorLight });
+			svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
 			_el.appendChild(svg);
 
-			svg.appendChild(makeSVG("rect", {"fill": _htOption.colorLight, "width": "100%", "height": "100%"}));
-			svg.appendChild(makeSVG("rect", {"fill": _htOption.colorDark, "width": "1", "height": "1", "id": "template"}));
+			svg.appendChild(makeSVG("rect", { "fill": _htOption.colorLight, "width": "100%", "height": "100%" }));
+			svg.appendChild(makeSVG("rect", { "fill": _htOption.colorDark, "width": "1", "height": "1", "id": "template", "shape-rendering": "crispEdges" }));
 
 			for (var row = 0; row < nCount; row++) {
 				for (var col = 0; col < nCount; col++) {
 					if (oQRCode.isDark(row, col)) {
-						var child = makeSVG("use", {"x": String(col), "y": String(row)});
+						var child = makeSVG("use", { "x": String(row), "y": String(col) });
 						child.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#template")
 						svg.appendChild(child);
 					}
 				}
 			}
 		};
+
 		Drawing.prototype.clear = function () {
 			while (this._el.hasChildNodes())
 				this._el.removeChild(this._el.lastChild);
@@ -220,7 +221,7 @@ var QRCode;
 	})();
 
 	var useSVG = document.documentElement.tagName.toLowerCase() === "svg";
-
+	
 	// Drawing in DOM by using Table tag
 	var Drawing = useSVG ? svgDrawer : !_isSupportCanvas() ? (function () {
 		var Drawing = function (el, htOption) {
